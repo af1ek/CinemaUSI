@@ -1,0 +1,55 @@
+created:
+    - app/Http/Controllers/MovieController.php
+    - app/Http/Controllers/HallController.php
+    - app/Http/Controllers/ScreeningController.php
+    - app/Http/Controllers/ReservationController.php
+    - app/Http/Controllers/UserController.php
+    - database/factories/MovieFactory.php
+    - database/factories/HallFactory.php
+    - database/factories/ScreeningFactory.php
+    - database/factories/UserFactory.php
+    - database/factories/ReservationFactory.php
+    - database/migrations/2025_09_15_224446_create_movies_table.php
+    - database/migrations/2025_09_15_224447_create_halls_table.php
+    - database/migrations/2025_09_15_224448_create_screenings_table.php
+    - database/migrations/2025_09_15_224449_create_users_table.php
+    - database/migrations/2025_09_15_224450_create_reservations_table.php
+    - app/Models/Movie.php
+    - app/Models/Hall.php
+    - app/Models/Screening.php
+    - app/Models/User.php
+    - app/Models/Reservation.php
+    - tests/Feature/Http/Controllers/MovieControllerTest.php
+    - tests/Feature/Http/Controllers/HallControllerTest.php
+    - tests/Feature/Http/Controllers/ScreeningControllerTest.php
+    - tests/Feature/Http/Controllers/ReservationControllerTest.php
+    - tests/Feature/Http/Controllers/UserControllerTest.php
+updated:
+    - routes/web.php
+skipped:
+    - resources/views/movie/index.blade.php
+    - resources/views/movie/create.blade.php
+    - resources/views/movie/show.blade.php
+    - resources/views/movie/edit.blade.php
+    - resources/views/hall/index.blade.php
+    - resources/views/hall/create.blade.php
+    - resources/views/hall/show.blade.php
+    - resources/views/hall/edit.blade.php
+    - resources/views/screening/index.blade.php
+    - resources/views/screening/create.blade.php
+    - resources/views/screening/show.blade.php
+    - resources/views/screening/edit.blade.php
+    - resources/views/reservation/index.blade.php
+    - resources/views/reservation/create.blade.php
+    - resources/views/reservation/show.blade.php
+    - resources/views/reservation/edit.blade.php
+    - resources/views/user/index.blade.php
+    - resources/views/user/create.blade.php
+    - resources/views/user/show.blade.php
+    - resources/views/user/edit.blade.php
+models:
+    Hall: { name: 'string:100', total_seats: 'integer unsigned', relationships: { hasMany: Screening } }
+    Movie: { name: 'string:150', genre: 'string:60', length: 'integer unsigned', description: 'text nullable', poster: blob, relationships: { hasMany: Screening } }
+    Reservation: { screening_id: 'id foreign:screenings onDelete:cascade', user_id: 'id foreign:users onDelete:cascade', reserved_tickets: 'integer unsigned default:1', status: "enum:placed,confirmed,canceled default:'placed'", relationships: { belongsTo: 'Screening, User' } }
+    Screening: { movie_id: 'id foreign:movies', hall_id: 'id foreign:halls', showtime: datetime, available_seats: 'integer unsigned', indexes: [{ unique: 'movie_id, hall_id, showtime' }], relationships: { belongsTo: 'Movie, Hall', hasMany: Reservation } }
+    User: { username: 'string:100 unique', email: 'string:150 unique', password: string, role: "enum:visitor,admin default:'visitor'", relationships: { hasMany: Reservation } }

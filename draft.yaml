@@ -1,0 +1,65 @@
+models:
+  Movie:
+    name: string:150
+    genre: string:60
+    length: integer unsigned
+    description: text nullable
+    poster: blob
+    relationships:
+      hasMany: Screening
+
+  Hall:
+    name: string:100
+    total_seats: integer unsigned
+    relationships:
+      hasMany: Screening
+
+  Screening:
+    movie_id: id foreign:movies
+    hall_id: id foreign:halls
+    showtime: datetime
+    available_seats: integer unsigned
+    indexes:
+      - unique: movie_id, hall_id, showtime
+    relationships:
+      belongsTo: Movie, Hall
+      hasMany: Reservation
+
+  User: 
+    username: string:100 unique
+    email: string:150 unique
+    password: string
+    role: enum:visitor,admin default:'visitor'
+    relationships:
+      hasMany: Reservation
+
+  Reservation:
+    screening_id: id foreign:screenings onDelete:cascade
+    user_id: id foreign:users onDelete:cascade
+    reserved_tickets: integer unsigned default:1
+    status: enum:placed,confirmed,canceled default:'placed'
+    relationships:
+      belongsTo: Screening, User
+
+controllers:
+  Movie:
+    resource
+
+  Hall:
+    resource
+
+  Screening:
+    resource
+
+  Reservation:
+    resource
+
+  User:
+    resource
+
+
+
+
+
+
+    
