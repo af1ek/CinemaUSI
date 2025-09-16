@@ -5,33 +5,64 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReservationStoreRequest;
 use App\Http\Requests\ReservationUpdateRequest;
 use App\Models\Reservation;
+use App\Models\Screening;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ReservationController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
-        $reservations = Reservation::all();
+        $reservations = Reservation::with(['screening.movie', 'screening.hall'])
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('reservation.index', [
-            'reservations' => $reservations,
+        return view('reservation.index', compact('reservations'));
+    }
+
+    public function create(Request $request, $screeningId): View
+    {
+        $screening = Screening::with(['movie', 'hall'])->findOrFail($screeningId);
+
+        $reservedTickets = Reservation::where('screening_id', $screeningId)
+            ->where('status', '!=', 'cancelled')
+            ->sum('reserved_tickets');
+
+        $availableSeats = $screening->hall->total_seats - $reservedTickets;
+        $maxTickets = min(8, $availableSeats); // max 8 ili koliko ima dostupno
+
+        return view('reservation.create', compact('screening', 'availableSeats', 'maxTickets'));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'screening_id' => 'required|exists:screenings,id',
+            'tickets' => 'required|integer|min:1|max:8',
         ]);
-    }
 
-    public function create(Request $request): Response
-    {
-        return view('reservation.create');
-    }
 
-    public function store(ReservationStoreRequest $request): Response
-    {
-        $reservation = Reservation::create($request->validated());
+        $screening = Screening::with('hall')->findOrFail($validated['screening_id']);
+        $reservedTickets = Reservation::where('screening_id', $validated['screening_id'])
+            ->where('status', '!=', 'cancelled')
+            ->sum('reserved_tickets');
 
-        $request->session()->flash('reservation.id', $reservation->id);
+        $availableSeats = $screening->hall->total_seats - $reservedTickets;
 
-        return redirect()->route('reservations.index');
+        if ($validated['tickets'] > $availableSeats) {
+            return back()->withErrors(['tickets' => 'Nema dovoljno slobodnih mesta.']);
+        }
+
+        Reservation::create([
+            'screening_id' => $validated['screening_id'],
+            'user_id' => auth()->id(),
+            'reserved_tickets' => $validated['tickets'],
+            'status' => 'placed'
+        ]);
+
+        return redirect()->route('reservation.index')->with('success', 'Rezervacija uspešno kreirana.');
     }
 
     public function show(Request $request, Reservation $reservation): Response
@@ -57,10 +88,14 @@ class ReservationController extends Controller
         return redirect()->route('reservations.index');
     }
 
-    public function destroy(Request $request, Reservation $reservation): Response
+    public function destroy(Reservation $reservation): RedirectResponse
     {
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $reservation->delete();
 
-        return redirect()->route('reservations.index');
+        return redirect()->back()->with('success', 'Rezervacija je uspešno otkazana.');
     }
 }

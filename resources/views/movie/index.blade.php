@@ -7,11 +7,21 @@
 
 <main class="flex-1 px-8 py-10">
     <div class="grid grid-cols-2 md:grid-cols-4 justify-items-center">
-        @foreach (['Film 1', 'Film 2', 'Film 3', 'Film 4'] as $film)
-            <div class="w-48 h-72 bg-[#0F1115] rounded-lg flex flex-col items-center justify-center shadow-md">
-                <span class="text-gray-500">POSTER</span>
-                <p class="mt-3 text-sm">{{ $film }}</p>
-            </div>
+        @foreach ($movies as $movie)
+            <a href="{{ route('movie.details', $movie->id) }}">
+                <div class="w-48 h-72 bg-[#0F1115] rounded-lg flex flex-col items-center justify-center shadow-md">
+                    @if ($movie->poster)
+                        <img src="{{ asset('storage/' . $movie->poster) }}"
+                             alt="{{ $movie->name }}"
+                             class="w-full h-52 object-cover rounded-md">
+                    @else
+                        <div class="w-full h-52 flex items-center justify-center text-gray-500">
+                            POSTER
+                        </div>
+                    @endif
+                    <p class="mt-3 text-sm">{{ $movie->name }}</p>
+                </div>
+            </a>
         @endforeach
     </div>
 </main>

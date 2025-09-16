@@ -27,7 +27,7 @@ class MovieController extends Controller
         return view('home', compact('movies'));
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request): View
     {
         return view('movie.create');
     }
