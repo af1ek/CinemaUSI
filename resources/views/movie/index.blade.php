@@ -9,7 +9,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 justify-items-center">
         @foreach ($movies as $movie)
             <a href="{{ route('movie.details', $movie->id) }}">
-                <div class="w-48 h-72 bg-[#0F1115] rounded-lg flex flex-col items-center justify-center shadow-md">
+                <div class="w-48 h-72 bg-[#0F1115] rounded-lg flex flex-col items-center justify-center shadow-md hover:bg-[#1A1D23] hover:shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer">
                     @if ($movie->poster)
                         <img src="{{ asset('storage/' . $movie->poster) }}"
                              alt="{{ $movie->name }}"

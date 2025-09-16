@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ScreeningController;
+use App\Models\Hall;
 use App\Models\Movie;
 use App\Models\Screening;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -45,22 +47,18 @@ Route::get('/movies/{id}', function ($id) {
 
 
 Route::get('/admin', function () {
-    $stats = [
-        ['title' => 'Film 1', 'tickets' => 300],
-        ['title' => 'Film 2', 'tickets' => 230],
-        ['title' => 'Film 3', 'tickets' => 125],
-    ];
-
-    return view('admin.index', compact('stats'));
+    return view('admin.index');
 })->name('admin.index');
 
-Route::get('/admin/create', function (\Illuminate\Http\Request $request) {
-    $type = $request->query('type'); // može biti "movie" ili "projection"
+Route::get('/admin/create', function (Request $request) {
+    $type = $request->query('type', 'movie');
 
-    return view('admin.create', compact('type'));
+    $movies = Movie::all();
+    $halls = Hall::all();
+
+    return view('admin.create', compact('type', 'movies', 'halls'));
 })->name('admin.create');
 
-Route::get('/admin/create', [ScreeningController::class, 'create'])->name('admin.create');
 
 Route::post('/movies', [MovieController::class, 'store'])->name('movie.store');
 Route::post('/screenings', [ScreeningController::class, 'store'])->name('screening.store');

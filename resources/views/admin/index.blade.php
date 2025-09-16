@@ -5,7 +5,6 @@
 @section('content')
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-        <!-- Leva strana: akcije -->
         <div>
             <h1 class="text-2xl font-bold mb-6">Admin Panel</h1>
 
