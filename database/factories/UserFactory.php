@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'username' => fake()->userName(),
             'email' => fake()->safeEmail(),
             'password' => fake()->password(),
-            'role' => fake()->randomElement(["visitor","admin"]),
+            'role' => fake()->randomElement(["user","admin"]),
         ];
     }
 }
