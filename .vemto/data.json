@@ -5,7 +5,7 @@
                 "uuid": "bb395f48-1271-4550-9ba1-b8a679180e15",
                 "id": 1,
                 "createdAt": "2025-09-16 00:32:47",
-                "updatedAt": "2025-09-16 00:48:19",
+                "updatedAt": "2025-09-16 02:10:40",
                 "settings": {
                     "cssFramework": "tailwind",
                     "uiStarterKit": "breeze",
@@ -47,7 +47,13 @@
                 "translations": {
                     "en": {
                         "navigation.home": "Home",
-                        "navigation.apps": "Apps"
+                        "navigation.apps": "Apps",
+                        "crud.halls.filament.name.helper_text": "",
+                        "crud.halls.filament.name.label": "",
+                        "crud.halls.filament.name.description": "",
+                        "crud.halls.filament.total_seats.helper_text": "",
+                        "crud.halls.filament.total_seats.label": "",
+                        "crud.halls.filament.total_seats.description": ""
                     }
                 },
                 "vthemeKeys": {
@@ -150,7 +156,8 @@
                                 6,
                                 7,
                                 8
-                            ]
+                            ],
+                            "cruds.projectId": []
                         }
                     }
                 },
@@ -187,7 +194,8 @@
                             ],
                             "models.tableId": [
                                 2
-                            ]
+                            ],
+                            "cruds.tableId": []
                         }
                     },
                     "11": {
@@ -551,21 +559,26 @@
                         "hasMany": {
                             "fillable_model_column.columnId": [
                                 4
-                            ]
+                            ],
+                            "cruds.defaultSearchColumnId": [],
+                            "inputs.columnId": []
                         }
                     },
                     "53": {
                         "hasMany": {
                             "fillable_model_column.columnId": [
                                 5
-                            ]
+                            ],
+                            "inputs.columnId": []
                         }
                     },
                     "54": {
                         "hasMany": {}
                     },
                     "55": {
-                        "hasMany": {}
+                        "hasMany": {
+                            "cruds.defaultSortColumnId": []
+                        }
                     },
                     "56": {
                         "hasMany": {
@@ -2425,7 +2438,8 @@
                             ],
                             "relationships.relatedModelId": [
                                 6
-                            ]
+                            ],
+                            "cruds.modelId": []
                         }
                     },
                     "3": {
@@ -3362,7 +3376,9 @@
                         "hasMany": {}
                     },
                     "4": {
-                        "hasMany": {}
+                        "hasMany": {
+                            "cruds.sectionId": []
+                        }
                     }
                 },
                 "additionalIndexes": {},
@@ -3404,12 +3420,12 @@
             "item_1": {
                 "name": "App",
                 "scrollX": 24248,
-                "scrollY": 24620,
+                "scrollY": 24619,
                 "zoom": 70,
                 "projectId": 1,
                 "id": 1,
                 "createdAt": "2025-09-16 00:32:50",
-                "updatedAt": "2025-09-16 00:45:56"
+                "updatedAt": "2025-09-16 02:10:19"
             },
             "__tableData": {
                 "count": 2,
@@ -4018,6 +4034,36 @@
                 "inverseId": 4,
                 "removed": false
             }
+        },
+        "cruds": {
+            "__tableData": {
+                "count": 0,
+                "lastPrimaryKey": 1,
+                "index": {},
+                "additionalIndexes": {},
+                "items": [],
+                "relations": []
+            }
+        },
+        "crud_panels": {
+            "__tableData": {
+                "count": 0,
+                "lastPrimaryKey": 1,
+                "index": {},
+                "additionalIndexes": {},
+                "items": [],
+                "relations": []
+            }
+        },
+        "inputs": {
+            "__tableData": {
+                "count": 0,
+                "lastPrimaryKey": 2,
+                "index": {},
+                "additionalIndexes": {},
+                "items": [],
+                "relations": []
+            }
         }
     },
     "tablesNames": [
@@ -4034,6 +4080,9 @@
         "schema_sections",
         "navs",
         "renderable_files",
-        "relationships"
+        "relationships",
+        "cruds",
+        "crud_panels",
+        "inputs"
     ]
 }

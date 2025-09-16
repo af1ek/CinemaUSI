@@ -9,15 +9,22 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
+
 class MovieController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
         $movies = Movie::all();
 
         return view('movie.index', [
             'movies' => $movies,
         ]);
+    }
+
+    public function home()
+    {
+        $movies = Movie::all();
+        return view('home', compact('movies'));
     }
 
     public function create(Request $request): Response

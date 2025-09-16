@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MovieController;
 
 Route::view('/', 'welcome');
 
@@ -15,45 +16,63 @@ Route::view('profile', 'profile')
 require __DIR__.'/auth.php';
 
 
-Route::resource('movies', App\Http\Controllers\MovieController::class);
+Route::get('/', [MovieController::class, 'index'])->name('home');
 
-Route::resource('halls', App\Http\Controllers\HallController::class);
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
 
-Route::resource('screenings', App\Http\Controllers\ScreeningController::class);
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
 
-Route::resource('reservations', App\Http\Controllers\ReservationController::class);
+Route::get('/movies/{id}', function ($id) {
+    $movie = [
+        'title' => 'Naslov filma',
+        'description' => 'Ovde se nalazi opis filma. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fringilla luctus arcu nec ultrices. Vestibulum cursus mollis metus.',
+        'genre' => 'Akcija',
+        'length' => 120,
+        'poster' => null
+    ];
 
-Route::resource('users', App\Http\Controllers\UserController::class);
+    $projections = [
+        '09-05-2025 19:30',
+        '10-05-2025 17:00',
+        '11-05-2025 20:15'
+    ];
 
+    return view('movie.movieDetails', compact('movie', 'projections'));
+})->name('movie.Details');
 
-Route::resource('movies', App\Http\Controllers\MovieController::class);
+Route::get('/reservation', function () {
+    $availableSeats = 15;
+    $maxTickets = 8;
 
-Route::resource('halls', App\Http\Controllers\HallController::class);
+    return view('reservation.create', compact('availableSeats', 'maxTickets'));
+})->name('reservation.create');
 
-Route::resource('screenings', App\Http\Controllers\ScreeningController::class);
+Route::get('/my-reservations', function () {
+    $reservations = [
+        ['movie' => 'Film 1', 'time' => '09-05-2025 19:30'],
+        ['movie' => 'Film 2', 'time' => '09-08-2025 17:30'],
+        ['movie' => 'Film 3', 'time' => '09-12-2025 20:00'],
+    ];
 
-Route::resource('reservations', App\Http\Controllers\ReservationController::class);
+    return view('reservation.index', compact('reservations'));
+})->name('reservation.index');
 
-Route::resource('users', App\Http\Controllers\UserController::class);
+Route::get('/admin', function () {
+    $stats = [
+        ['title' => 'Film 1', 'tickets' => 300],
+        ['title' => 'Film 2', 'tickets' => 230],
+        ['title' => 'Film 3', 'tickets' => 125],
+    ];
 
+    return view('admin.index', compact('stats'));
+})->name('admin.index');
 
-Route::resource('movies', App\Http\Controllers\MovieController::class);
+Route::get('/admin/create', function (\Illuminate\Http\Request $request) {
+    $type = $request->query('type'); // može biti "movie" ili "projection"
 
-Route::resource('halls', App\Http\Controllers\HallController::class);
-
-Route::resource('screenings', App\Http\Controllers\ScreeningController::class);
-
-Route::resource('reservations', App\Http\Controllers\ReservationController::class);
-
-Route::resource('users', App\Http\Controllers\UserController::class);
-
-
-Route::resource('movies', App\Http\Controllers\MovieController::class);
-
-Route::resource('halls', App\Http\Controllers\HallController::class);
-
-Route::resource('screenings', App\Http\Controllers\ScreeningController::class);
-
-Route::resource('reservations', App\Http\Controllers\ReservationController::class);
-
-Route::resource('users', App\Http\Controllers\UserController::class);
+    return view('admin.create', compact('type'));
+})->name('admin.create');

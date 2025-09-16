@@ -1,36 +1,35 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>@yield('title', 'CineMax')</title>
+    @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
+</head>
+<body class="bg-[#0E0F12] text-gray-200 min-h-screen flex flex-col">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<header class="flex justify-between items-center px-6 py-4 border-b border-gray-800">
+    <div class="text-2xl font-bold">CineMax</div>
+    <nav class="flex items-center gap-6">
+        <a href="{{ route('home') }}" class="hover:text-gray-400">Početna</a>
+        <a href="#" class="hover:text-gray-400">Filmovi</a>
+        <a href="/login" class="hover:text-gray-400">Login</a>
+        <a href="/register" class="hover:text-gray-400">Register</a>
+    </nav>
+</header>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+<main class="flex-1 px-8 py-10">
+    @yield('content')
+</main>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            <livewire:layout.navigation />
+<footer class="border-t border-gray-800 px-6 py-6 flex justify-between items-center text-sm text-gray-500">
+    <span>© 2025 CineMax</span>
+    <div class="flex gap-4">
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+    </div>
+</footer>
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+</body>
 </html>
