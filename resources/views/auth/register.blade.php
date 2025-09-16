@@ -7,9 +7,9 @@
         <div class="w-full max-w-sm bg-[#191B1F] rounded-xl shadow-lg p-8">
             <h2 class="text-xl font-semibold mb-6">Register</h2>
 
-            <form method="POST" action="#">
+            <form method="POST" action='{{ route("register") }}'>
                 @csrf
-                <!-- Email -->
+
                 <div class="mb-4">
                     <label for="email" class="block text-sm mb-2">Email</label>
                     <input id="email" type="email" name="email" required
@@ -17,7 +17,7 @@
                            placeholder="ime@domen.rs">
                 </div>
 
-                <!-- Username -->
+
                 <div class="mb-4">
                     <label for="username" class="block text-sm mb-2">Korisničko ime</label>
                     <input id="username" type="text" name="username" required

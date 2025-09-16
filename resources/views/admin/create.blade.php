@@ -10,31 +10,46 @@
             </h1>
 
             @if ($type === 'movie')
-                <form method="POST" action="" enctype="multipart/form-data" class="flex flex-col gap-4">
+                <form method="POST" action="{{ route('movie.store') }}" enctype="multipart/form-data" class="flex flex-col gap-4">
                     @csrf
                     <div>
                         <label class="block mb-2 text-gray-300">Naziv</label>
-                        <input type="text" name="naziv" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        <input type="text" name="name" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        @error('name')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block mb-2 text-gray-300">Žanr</label>
-                        <input type="text" name="zanr" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        <input type="text" name="genre" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        @error('genre')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block mb-2 text-gray-300">Trajanje (min)</label>
-                        <input type="number" name="trajanje" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        <input type="number" name="length" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        @error('length')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block mb-2 text-gray-300">Opis</label>
-                        <textarea name="opis" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white"></textarea>
+                        <textarea name="description" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white"></textarea>
+                        @error('description')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block mb-2 text-gray-300">Poster</label>
                         <input type="file" name="poster" class="w-full text-gray-300">
+                        @error('poster')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="flex justify-between gap-4 mt-4">
@@ -43,31 +58,42 @@
                     </div>
                 </form>
             @elseif ($type === 'projection')
-                <form method="POST" action="" class="flex flex-col gap-4">
+                <form method="POST" action="{{ route('screening.store') }}" class="flex flex-col gap-4">
                     @csrf
                     <div>
                         <label class="block mb-2 text-gray-300">Film</label>
-                        <select name="film_id" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        <select name="movie_id" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
                             <option value="">Odaberite film...</option>
+                            @foreach($movies as $movie)
+                                <option value="{{ $movie->id }}">{{ $movie->name }}</option>
+                            @endforeach
                         </select>
+                        @error('movie_id')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block mb-2 text-gray-300">Sala</label>
-                        <select name="sala_id" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        <select name="hall_id" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
                             <option value="">Odaberite salu...</option>
+                            @foreach($halls as $hall)
+                                <option value="{{ $hall->id }}">{{ $hall->name }} ({{ $hall->total_seats }} mesta)</option>
+                            @endforeach
                         </select>
+                        @error('hall_id')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block mb-2 text-gray-300">Termin</label>
-                        <input type="datetime-local" name="termin" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        <input type="datetime-local" name="showtime" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
+                        @error('showtime')
+                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <div>
-                        <label class="block mb-2 text-gray-300">Slobodna mesta</label>
-                        <input type="number" name="slobodna_mesta" class="w-full px-3 py-2 bg-[#0F1115] border border-gray-700 rounded-md text-white">
-                    </div>
 
                     <div class="flex justify-between gap-4 mt-4">
                         <a href="{{ route('admin.index') }}" class="w-1/2 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md text-center">Odustani</a>
@@ -79,7 +105,3 @@
     </div>
 @endsection
 
-
-{{--{{ route('movies.store') }}--}}
-
-{{--{{ route('projekcijas.store') }}--}}

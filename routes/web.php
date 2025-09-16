@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ScreeningController;
+use App\Models\Movie;
+use App\Models\Screening;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::view('/', 'welcome');
 
@@ -19,48 +25,24 @@ Route::get('/all-movies', [MovieController::class, 'allMovies'])->name('movie.al
 
 Route::get('/', [MovieController::class, 'index'])->name('home');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/movies/{id}', function ($id) {
-    $movie = [
-        'title' => 'Naslov filma',
-        'description' => 'Ovde se nalazi opis filma. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fringilla luctus arcu nec ultrices. Vestibulum cursus mollis metus.',
-        'genre' => 'Akcija',
-        'length' => 120,
-        'poster' => null
-    ];
+    $movie = Movie::findOrFail($id);
 
-    $projections = [
-        '09-05-2025 19:30',
-        '10-05-2025 17:00',
-        '11-05-2025 20:15'
-    ];
+    $projections = Screening::where('movie_id', $id)
+        ->orderBy('showtime')
+        ->get();
 
     return view('movie.movieDetails', compact('movie', 'projections'));
-})->name('movie.Details');
+})->name('movie.details');
 
-Route::get('/reservation', function () {
-    $availableSeats = 15;
-    $maxTickets = 8;
 
-    return view('reservation.create', compact('availableSeats', 'maxTickets'));
-})->name('reservation.create');
-
-Route::get('/my-reservations', function () {
-    $reservations = [
-        ['movie' => 'Film 1', 'time' => '09-05-2025 19:30'],
-        ['movie' => 'Film 2', 'time' => '09-08-2025 17:30'],
-        ['movie' => 'Film 3', 'time' => '09-12-2025 20:00'],
-    ];
-
-    return view('reservation.index', compact('reservations'));
-})->name('reservation.index');
 
 Route::get('/admin', function () {
     $stats = [
@@ -77,3 +59,15 @@ Route::get('/admin/create', function (\Illuminate\Http\Request $request) {
 
     return view('admin.create', compact('type'));
 })->name('admin.create');
+
+Route::get('/admin/create', [ScreeningController::class, 'create'])->name('admin.create');
+
+Route::post('/movies', [MovieController::class, 'store'])->name('movie.store');
+Route::post('/screenings', [ScreeningController::class, 'store'])->name('screening.store');
+
+Route::get('/movies', [MovieController::class, 'single'])->name('movie.single');
+
+Route::get('/reservations/create/{screening}', [ReservationController::class, 'create'])->name('reservation.create');
+Route::post('/reservations', [ReservationController::class, 'store'])->name('reservation.store');
+Route::get('/reservations', [ReservationController::class, 'index'])->name('reservation.index');
+Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservation.destroy');

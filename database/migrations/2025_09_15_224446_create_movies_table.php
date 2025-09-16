@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('genre', 60);
             $table->unsignedInteger('length');
             $table->text('description')->nullable();
-            $table->binary('poster')->nullable;
+            $table->binary('poster')->nullable();
             $table->timestamps();
         });
     }

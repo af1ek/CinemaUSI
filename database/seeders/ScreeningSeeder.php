@@ -19,7 +19,6 @@ class ScreeningSeeder extends Seeder
             'movie_id' => $movie->id,
             'hall_id' => $hall->id,
             'showtime' => Carbon::now()->addDays(1),
-            'available_seats' => $hall->total_seats,
         ]);
     }
 }

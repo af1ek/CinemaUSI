@@ -11,7 +11,7 @@ class ReservationSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::where('role', 'visitor')->first();
+        $user = User::where('role', 'user')->first();
         $screening = Screening::first();
 
         if ($user && $screening) {

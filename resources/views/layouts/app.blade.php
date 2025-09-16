@@ -8,15 +8,46 @@
 </head>
 <body class="bg-[#0E0F12] text-gray-200 min-h-screen flex flex-col">
 
+
 <header class="flex justify-between items-center px-6 py-4 border-b border-gray-800">
     <div class="text-2xl font-bold">CineMax</div>
+
     <nav class="flex items-center gap-6">
         <a href="{{ route('home') }}" class="hover:text-gray-400">Početna</a>
-        <a href="#" class="hover:text-gray-400">Filmovi</a>
-        <a href="/login" class="hover:text-gray-400">Login</a>
-        <a href="/register" class="hover:text-gray-400">Register</a>
+        <a href="{{ route('movie.single') }}" class="hover:text-gray-400">Filmovi</a>
+
+        @guest
+            <a href="{{ route('login') }}" class="hover:text-gray-400">Login</a>
+            <a href="{{ route('register') }}" class="hover:text-gray-400">Register</a>
+        @endguest
+
+        @auth
+            @if(Auth::user()->role === 'admin')
+                <a href="{{ route('admin.index') }}" class="hover:text-gray-400">Admin Panel</a>
+                <a href="{{ route('admin.create', ['type' => 'movie'])  }}" class="hover:text-gray-400">Dodaj film</a>
+                <a href="{{ route('admin.create', ['type' => 'projection'])  }}" class="hover:text-gray-400">Dodaj projekciju</a>
+            @elseif(Auth::user()->role === 'user')
+                <a href="{{ route('reservation.index') }}" class="hover:text-gray-400">Moje rezervacije</a>
+            @endif
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="hover:text-gray-400">Logout</button>
+            </form>
+        @endauth
+
+        <!-- Search bar -->
+        <form action="{{ route('movie.single') }}" method="GET" class="ml-6">
+            <input
+                type="text"
+                name="q"
+                placeholder="Search..."
+                class="px-3 py-1 rounded-md bg-gray-900 text-gray-200 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+        </form>
     </nav>
 </header>
+
 
 <main class="flex-1 px-8 py-10">
     @yield('content')

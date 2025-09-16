@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('movie_id')->constrained();
             $table->foreignId('hall_id')->constrained();
             $table->dateTime('showtime');
-            $table->unsignedInteger('available_seats');
             $table->unique(['movie_id', 'hall_id', 'showtime']);
             $table->timestamps();
         });
