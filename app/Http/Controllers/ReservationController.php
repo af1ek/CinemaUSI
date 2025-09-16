@@ -44,9 +44,17 @@ class ReservationController extends Controller
         ]);
 
 
+        $existingReservation = Reservation::where('screening_id', $validated['screening_id'])
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($existingReservation) {
+            return back()->withErrors(['screening' => '⚠️ Već imate rezervaciju za ovu projekciju.']);
+        }
+
+
         $screening = Screening::with('hall')->findOrFail($validated['screening_id']);
         $reservedTickets = Reservation::where('screening_id', $validated['screening_id'])
-            ->where('status', '!=', 'cancelled')
             ->sum('reserved_tickets');
 
         $availableSeats = $screening->hall->total_seats - $reservedTickets;
@@ -59,7 +67,6 @@ class ReservationController extends Controller
             'screening_id' => $validated['screening_id'],
             'user_id' => auth()->id(),
             'reserved_tickets' => $validated['tickets'],
-            'status' => 'placed'
         ]);
 
         return redirect()->route('reservation.index')->with('success', 'Rezervacija uspešno kreirana.');

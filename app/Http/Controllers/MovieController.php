@@ -14,7 +14,7 @@ class MovieController extends Controller
 {
     public function index(Request $request): View
     {
-        $movies = Movie::all();
+        $movies = Movie::whereHas('screenings')->get();
 
         return view('movie.index', [
             'movies' => $movies,

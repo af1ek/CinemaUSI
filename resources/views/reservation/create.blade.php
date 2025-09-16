@@ -7,7 +7,14 @@
         <div class="w-full max-w-md bg-[#191B1F] rounded-xl shadow-lg p-8 text-center">
             <h2 class="text-xl font-semibold mb-4">Rezervacija karata</h2>
 
-            <!-- Info o filmu i projekciji -->
+            @if($errors->any())
+                <div class="mb-4 p-3 bg-red-600/20 border border-red-600 rounded-lg">
+                    @foreach($errors->all() as $error)
+                        <p class="text-red-400 text-sm">{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="mb-6 text-left bg-[#0F1115] p-4 rounded-lg">
                 <h3 class="font-semibold">{{ $screening->movie->name }}</h3>
                 <p class="text-sm text-gray-400">{{ \Carbon\Carbon::parse($screening->showtime)->format('d.m.Y H:i') }}</p>
