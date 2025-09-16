@@ -32,13 +32,23 @@ class MovieController extends Controller
         return view('movie.create');
     }
 
-    public function store(MovieStoreRequest $request): Response
+    public function store(Request $request): RedirectResponse
     {
-        $movie = Movie::create($request->validated());
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'genre' => 'required|string|max:100',
+            'length' => 'required|integer|min:1',
+            'description' => 'nullable|string',
+            'poster' => 'nullable|image|max:2048', // slika do 2MB
+        ]);
 
-        $request->session()->flash('movie.id', $movie->id);
+        if ($request->hasFile('poster')) {
+            $validated['poster'] = $request->file('poster')->store('posters', 'public');
+        }
 
-        return redirect()->route('movies.index');
+        Movie::create($validated);
+
+        return redirect()->route('admin.index')->with('success', 'Film uspešno dodat.');
     }
 
     public function show(Request $request, Movie $movie): Response
@@ -70,4 +80,12 @@ class MovieController extends Controller
 
         return redirect()->route('movies.index');
     }
+
+    public function allMovies(): View
+    {
+        $movies = \App\Models\Movie::all();
+        return view('movie.movie_list', compact('movies'));
+    }
+
 }
+

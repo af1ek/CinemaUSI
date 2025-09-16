@@ -15,6 +15,7 @@ Route::view('profile', 'profile')
 
 require __DIR__.'/auth.php';
 
+Route::get('/all-movies', [MovieController::class, 'allMovies'])->name('movie.all');
 
 Route::get('/', [MovieController::class, 'index'])->name('home');
 

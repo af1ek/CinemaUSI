@@ -23,6 +23,7 @@ class Movie extends Model
         'poster',
     ];
 
+
     /**
      * Get the attributes that should be cast.
      *
