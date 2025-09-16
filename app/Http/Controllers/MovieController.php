@@ -87,5 +87,19 @@ class MovieController extends Controller
         return view('movie.movie_list', compact('movies'));
     }
 
+    public function single(Request $request)
+    {
+        $query = Movie::query();
+
+        if ($request->filled('q')) {
+            $search = $request->q;
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        $movies = $query->get();
+
+        return view('movie.single', compact('movies'));
+    }
 }
 
